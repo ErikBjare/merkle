@@ -1,18 +1,31 @@
 import com.roundeights.hasher.Implicits._
 
-class MerkleTree(var root: Node)
+class MerkleTree(var root: Node) {
+  /*
+  def toDot(): String = {
+    root match {
+      case branch: Branch =>
+        branch.children().foreach((n: Node) => {
+          printTree(n, depth + 1, childrenBefore)
+          childrenBefore += 1
+          childrenAfter += 1
+        })
+      case _ =>
+    }
+  }
+  */
+}
 
-trait Node {
-  def hash(): String
+trait Node extends Hashable {
 
-  def string(depth: Integer = 0, childrenBefore: Integer = 0): String = {
+  def string(depth: Integer = 0, childrenBefore: Integer = 0, childrenAfter: Integer = 0): String = {
     val nodeType = this match {
       case x: Branch => "branch"
       case x: Leaf => "leaf"
     }
 
     // │ ├ ─ └ ┌
-    val treeRoot = s"${if(depth == 0) "┌" else ""}${"│"*(depth-1)}${if (depth > 0) (if(nodeType.equals("branch")) "├┬" else (if (childrenBefore == 1) "└" else "├")) else ""}"
+    val treeRoot = s"${if(depth == 0) "┌" else ""}" + s"${if (childrenAfter > 0) "│"*(depth-1) else " "*(depth-1)}${if (depth > 0) (if(nodeType.equals("branch")) "├┬" else (if (childrenBefore == 1) "└" else "├")) else ""}"
     val treeArm = s"${"─"*(depth*1+1)}"
     val label = s"${nodeType}\t${hash}"
     treeRoot + treeArm + label

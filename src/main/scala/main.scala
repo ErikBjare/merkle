@@ -1,12 +1,13 @@
 object main {
-  def printTree(n: Node, depth: Integer = 0, childrenBefore: Integer = 0): Unit = {
-    println(n.string(depth, childrenBefore))
-    var children = 0
+  def printTree(n: Node, depth: Int = 0, childrenBefore: Int = 0, childrenAfter: Int = 0): Unit = {
+    println(n.string(depth, childrenBefore, childrenAfter))
+    var traversed_children = 0
     n match {
       case branch: Branch =>
-        branch.children().foreach((n: Node) => {
-          printTree(n, depth + 1, children)
-          children += 1
+        val children = branch.children()
+        children.foreach((n: Node) => {
+          printTree(n, depth + 1, traversed_children, children.length - traversed_children - 1)
+          traversed_children += 1
         })
       case _ =>
     }
